@@ -16,6 +16,9 @@ app.use(cors());
 app.use(clerkMiddleware());
 
 app.use(routes);
+app.get('/', (req, res) => {
+  res.send('Hello, Watchlist Service!');
+});
 app.listen(PORT, async() => {
   console.log(`Example app listening at http://localhost:${PORT}`)
   try {
