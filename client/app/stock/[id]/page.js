@@ -20,7 +20,7 @@ const Page = () => {
     const fetchStockData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8001/api/stock/${id}`
+          `${process.env.NEXT_PUBLIC_BACKEND_STOCK_SERVER_URL}/api/stock/${id}`
         );
         setStockdata(response.data);
         setLoading(false);

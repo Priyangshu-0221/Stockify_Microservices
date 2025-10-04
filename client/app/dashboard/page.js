@@ -23,7 +23,7 @@ const Page = (uid) => {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:8001/api/stock/allstocks").then((res) => {
+    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_STOCK_SERVER_URL}/api/stock/allstocks`).then((res) => {
       setAllstocks(res.data);
     });
   }, []);
@@ -38,7 +38,7 @@ const Page = (uid) => {
     }
     
     axios
-      .post("http://localhost:8002/api/watchlist/addwatchlist", { id, userId: clerkUserId }, {
+      .post(`${process.env.NEXT_PUBLIC_BACKEND_WATCHLIST_SERVER_URL}/api/watchlist/addwatchlist`, { id, userId: clerkUserId }, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'

@@ -69,7 +69,7 @@ const Navbar = () => {
       
       if (token && clerkUserId && userEmail) {
         try {
-          const response = await axios.post("http://localhost:8000/api/user/adduser", 
+          const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_USER_SERVER_URL}/api/user/adduser`, 
             {
               clerkUserId,
               userName,

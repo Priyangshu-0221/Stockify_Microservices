@@ -378,19 +378,32 @@ curl -X POST http://localhost:8002/api/watchlist/addwatchlist \
 
 **🔐 Authentication Required**: Bearer token for all endpoints
 
-| Method   | Endpoint             | Description                   | Request Body                |
-| -------- | -------------------- | ----------------------------- | --------------------------- |
-| `POST`   | `/addholdings`       | Add stock to portfolio        | `{owner, name, qty, price}` |
-| `GET`    | `/userholdings`      | Get user's portfolio          | Query: `?userId=<user_id>`  |
-| `DELETE` | `/removeuserholding` | Remove holding from portfolio | `{userId}`                  |
+| Method   | Endpoint             | Description                   | Request Body                         |
+| -------- | -------------------- | ----------------------------- | ------------------------------------ |
+| `POST`   | `/addholdings`       | Add stock to portfolio        | `{owner, name, qty, price}`          |
+| `GET`    | `/userholdings`      | Get user's portfolio          | Query: `?userId=<user_id>`           |
+| `DELETE` | `/removeuserholding` | Remove holding from portfolio | `{userId, id?}` or `{userId, name?}` |
 
 **Sample Request:**
 
 ```bash
+# Add holding
 curl -X POST http://localhost:8003/api/holdings/addholdings \
   -H "Authorization: Bearer <clerk_jwt_token>" \
   -H "Content-Type: application/json" \
   -d '{"owner":"user_id","name":"RELIANCE","qty":10,"price":2845.75}'
+
+# Remove holding by ID
+curl -X DELETE http://localhost:8003/api/holdings/removeuserholding \
+  -H "Authorization: Bearer <clerk_jwt_token>" \
+  -H "Content-Type: application/json" \
+  -d '{"userId":"user_id","id":"holding_id"}'
+
+# Remove holding by stock name (useful when selling from orders)
+curl -X DELETE http://localhost:8003/api/holdings/removeuserholding \
+  -H "Authorization: Bearer <clerk_jwt_token>" \
+  -H "Content-Type: application/json" \
+  -d '{"userId":"user_id","name":"RELIANCE"}'
 ```
 
 ### Order Service (`http://localhost:8004/api/orders`)
@@ -401,7 +414,7 @@ curl -X POST http://localhost:8003/api/holdings/addholdings \
 | -------- | ------------------ | ------------------------ | --------------------------------- |
 | `POST`   | `/addorder`        | Place buy/sell order     | `{owner, name, qty, price, mode}` |
 | `GET`    | `/userorder`       | Get user's order history | Query: `?userId=<user_id>`        |
-| `DELETE` | `/removeuserorder` | Remove/cancel order      | `{userId}`                        |
+| `DELETE` | `/removeuserorder` | Remove/cancel order      | `{userId, id}`                    |
 
 **Sample Request:**
 
@@ -571,9 +584,11 @@ Content-Type: application/json
 - ✅ Bearer token authentication
 - ✅ CORS configuration for frontend integration
 - ✅ Environment variable management
-- ✅ Comprehensive error handling
-- ✅ User data isolation
+- ✅ Comprehensive error handling with try-catch blocks
+- ✅ User data isolation and validation
 - ✅ Input validation and sanitization
+- ✅ Flexible deletion methods (by ID or name for holdings)
+- ✅ Database operation validation (checking deletedCount)
 
 ---
 
@@ -782,4 +797,4 @@ curl -X POST http://localhost:8000/api/user/adduser \
 
 ## 🙌 Acknowledgements
 
-Crafted with ❤️ by [Priyangshu](https://github.com/Priyangshu-0221) .  If this backend accelerates your trading ideas, consider leaving a ⭐ on the repo!
+Crafted with ❤️ by [Priyangshu](https://github.com/Priyangshu-0221) . If this backend accelerates your trading ideas, consider leaving a ⭐ on the repo!

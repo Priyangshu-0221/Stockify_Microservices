@@ -22,7 +22,7 @@ const OrderComponent = ({ orders }) => {
     
     try {
       // First, remove the order
-      await axios.delete("http://localhost:8004/api/orders/removeuserorder", {
+      await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_ORDER_SERVER_URL}/api/orders/removeuserorder`, {
         data: { id, userId },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -30,7 +30,7 @@ const OrderComponent = ({ orders }) => {
       });
       
       // Then, remove the holding by stock name
-      await axios.delete("http://localhost:8003/api/holdings/removeuserholding", {
+      await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_HOLDING_SERVER_URL}/api/holdings/removeuserholding`, {
         data: { userId, name: stockName },
         headers: {
           Authorization: `Bearer ${token}`,

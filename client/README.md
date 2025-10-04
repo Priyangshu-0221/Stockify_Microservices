@@ -44,9 +44,10 @@
 - 📊 **Real-time Stock Dashboard** with comprehensive market data
 - ⭐ **Personal Watchlist** with stock tracking and price alerts
 - 💼 **Portfolio Management** with holdings and performance analytics
-- 📋 **Order Management** for buy/sell transactions
+- 📋 **Order Management** for buy/sell transactions with integrated holding removal
 - 💰 **Funds Management** with deposit/withdrawal capabilities
 - 📈 **Interactive Charts** with Chart.js and Recharts integration
+- 🔄 **Flexible Deletion** - Remove holdings by ID or stock name
 - 🌙 **Dark Mode Support** with customizable themes
 - 📱 **Fully Responsive** design for all devices
 - ⚡ **Lightning Fast** with Next.js 15 and Turbopack
@@ -71,6 +72,8 @@
 - 🔄 **Automatic Code Splitting** with Next.js
 - 📱 **Progressive Web App** ready
 - 🌐 **SEO Optimized** with Next.js metadata
+- ☁️ **Production Deployment** - Backend services live on Render
+- 🌍 **Environment-based Configuration** for easy dev/prod switching
 
 ---
 
@@ -252,16 +255,19 @@ Add your environment variables to `.env.local`:
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_clerk_publishable_key_here
 CLERK_SECRET_KEY=sk_test_your_clerk_secret_key_here
 
+# Backend API URLs (Deployed on Render)
+NEXT_PUBLIC_BACKEND_STOCK_SERVER_URL=https://stockify-microservices-stock.onrender.com
+NEXT_PUBLIC_BACKEND_USER_SERVER_URL=https://stockify-microservices-user.onrender.com
+NEXT_PUBLIC_BACKEND_WATCHLIST_SERVER_URL=https://stockify-microservices-watchlist.onrender.com
+NEXT_PUBLIC_BACKEND_ORDER_SERVER_URL=https://stockify-microservices-orders.onrender.com
+NEXT_PUBLIC_BACKEND_HOLDING_SERVER_URL=https://stockify-microservices-holdings.onrender.com
 
-# Backend API URLs (Optional - defaults to localhost)
-NEXT_PUBLIC_USER_SERVICE_URL=http://localhost:8000
-NEXT_PUBLIC_STOCK_SERVICE_URL=http://localhost:8001
-NEXT_PUBLIC_WATCHLIST_SERVICE_URL=http://localhost:8002
-NEXT_PUBLIC_HOLDINGS_SERVICE_URL=http://localhost:8003
-NEXT_PUBLIC_ORDER_SERVICE_URL=http://localhost:8004
-
-# App Configuration (Optional)
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+# For Local Development (Optional - uncomment if running backend locally)
+# NEXT_PUBLIC_BACKEND_STOCK_SERVER_URL=http://localhost:8001
+# NEXT_PUBLIC_BACKEND_USER_SERVER_URL=http://localhost:8000
+# NEXT_PUBLIC_BACKEND_WATCHLIST_SERVER_URL=http://localhost:8002
+# NEXT_PUBLIC_BACKEND_ORDER_SERVER_URL=http://localhost:8004
+# NEXT_PUBLIC_BACKEND_HOLDING_SERVER_URL=http://localhost:8003
 ```
 
 ### 5. Start Development Server
@@ -299,13 +305,15 @@ open http://localhost:3000
 
 ### Backend Service URLs
 
-| Variable                            | Description                | Default                 |
-| ----------------------------------- | -------------------------- | ----------------------- |
-| `NEXT_PUBLIC_USER_SERVICE_URL`      | User service endpoint      | `http://localhost:8000` |
-| `NEXT_PUBLIC_STOCK_SERVICE_URL`     | Stock service endpoint     | `http://localhost:8001` |
-| `NEXT_PUBLIC_WATCHLIST_SERVICE_URL` | Watchlist service endpoint | `http://localhost:8002` |
-| `NEXT_PUBLIC_HOLDINGS_SERVICE_URL`  | Holdings service endpoint  | `http://localhost:8003` |
-| `NEXT_PUBLIC_ORDER_SERVICE_URL`     | Order service endpoint     | `http://localhost:8004` |
+| Variable                                   | Description                | Production URL (Render)                                 |
+| ------------------------------------------ | -------------------------- | ------------------------------------------------------- |
+| `NEXT_PUBLIC_BACKEND_USER_SERVER_URL`      | User service endpoint      | `https://stockify-microservices-user.onrender.com`      |
+| `NEXT_PUBLIC_BACKEND_STOCK_SERVER_URL`     | Stock service endpoint     | `https://stockify-microservices-stock.onrender.com`     |
+| `NEXT_PUBLIC_BACKEND_WATCHLIST_SERVER_URL` | Watchlist service endpoint | `https://stockify-microservices-watchlist.onrender.com` |
+| `NEXT_PUBLIC_BACKEND_HOLDING_SERVER_URL`   | Holdings service endpoint  | `https://stockify-microservices-holdings.onrender.com`  |
+| `NEXT_PUBLIC_BACKEND_ORDER_SERVER_URL`     | Order service endpoint     | `https://stockify-microservices-orders.onrender.com`    |
+
+**Note**: For local development, update these URLs to `http://localhost:800X` where X is the service port (0-4).
 
 ---
 
@@ -524,6 +532,15 @@ npm run lint:fix
 - **State Management** for dashboard data
 - **User Authentication** context
 - **API Data** caching and management
+
+#### OrderComponent (`app/dashboard/components/OrderComponent.js`)
+
+- **Order Display** with responsive table layout
+- **Sell Functionality** that removes both order and holding
+- **Dual Deletion** - Removes order by ID and holding by stock name
+- **Error Handling** with comprehensive try-catch and toast notifications
+- **Real-time Updates** with automatic page reload after successful sale
+- **Responsive Design** with mobile-optimized buttons and layout
 
 ---
 
@@ -746,21 +763,25 @@ import {
 
 ### 🌐 Backend Services
 
+**All services are deployed on Render and use environment variables for configuration.**
+
 #### Stock Service Integration
 
 ```javascript
-// Fetch all stocks
-const response = await axios.get("http://localhost:8001/api/stock/allstocks");
+// Fetch all stocks using environment variable
+const response = await axios.get(
+  `${process.env.NEXT_PUBLIC_BACKEND_STOCK_SERVER_URL}/api/stock/allstocks`
+);
 setStocks(response.data);
 ```
 
 #### Authenticated Requests
 
 ```javascript
-// Add to watchlist with authentication
+// Add to watchlist with authentication using environment variable
 const token = localStorage.getItem("token");
 const response = await axios.post(
-  "http://localhost:8002/api/watchlist/addwatchlist",
+  `${process.env.NEXT_PUBLIC_BACKEND_WATCHLIST_SERVER_URL}/api/watchlist/addwatchlist`,
   { id: stockId, userId: clerkUserId },
   {
     headers: {
@@ -771,6 +792,64 @@ const response = await axios.post(
 );
 ```
 
+#### Advanced Operations
+
+```javascript
+// Remove holding by ID (direct deletion)
+const token = localStorage.getItem("token");
+const userId = localStorage.getItem("userId");
+await axios.delete(
+  `${process.env.NEXT_PUBLIC_BACKEND_HOLDING_SERVER_URL}/api/holdings/removeuserholding`,
+  {
+    data: { userId, id: holdingId },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
+
+// Remove holding by stock name (when selling from orders)
+await axios.delete(
+  `${process.env.NEXT_PUBLIC_BACKEND_HOLDING_SERVER_URL}/api/holdings/removeuserholding`,
+  {
+    data: { userId, name: stockName },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
+
+// Sell stock: Remove both order and holding
+const sellStock = async (orderId, stockName) => {
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
+
+  try {
+    // Remove order using environment variable
+    await axios.delete(
+      `${process.env.NEXT_PUBLIC_BACKEND_ORDER_SERVER_URL}/api/orders/removeuserorder`,
+      {
+        data: { id: orderId, userId },
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    // Remove holding by stock name using environment variable
+    await axios.delete(
+      `${process.env.NEXT_PUBLIC_BACKEND_HOLDING_SERVER_URL}/api/holdings/removeuserholding`,
+      {
+        data: { userId, name: stockName },
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    toast.success("Stock sold successfully");
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Failed to sell stock");
+  }
+};
+```
+
 ### 🔄 Data Management
 
 - **Local Storage**: JWT tokens and user preferences
@@ -778,6 +857,8 @@ const response = await axios.post(
 - **Error Handling**: Comprehensive try-catch blocks
 - **Loading States**: User feedback during API calls
 - **Data Caching**: Minimize redundant API requests
+- **Flexible Deletion**: Support for removing holdings by ID or stock name
+- **Integrated Operations**: Coordinated deletion of orders and holdings
 
 ### ⚡ Performance Optimizations
 
@@ -888,6 +969,87 @@ const response = await axios.post(
 - **Web Vitals**: Core metrics tracking
 - **Bundle Analyzer**: Bundle size monitoring
 - **Performance Profiler**: React DevTools profiling
+
+---
+
+## ☁️ Deployment
+
+### 🚀 Backend Services (Render)
+
+All backend microservices are deployed on **Render** with the following URLs:
+
+| Service       | URL                                                   | Status  |
+| ------------- | ----------------------------------------------------- | ------- |
+| **User**      | https://stockify-microservices-user.onrender.com      | ✅ Live |
+| **Stock**     | https://stockify-microservices-stock.onrender.com     | ✅ Live |
+| **Watchlist** | https://stockify-microservices-watchlist.onrender.com | ✅ Live |
+| **Holdings**  | https://stockify-microservices-holdings.onrender.com  | ✅ Live |
+| **Orders**    | https://stockify-microservices-orders.onrender.com    | ✅ Live |
+
+### 🌐 Frontend Deployment
+
+The frontend can be deployed on various platforms:
+
+#### Vercel (Recommended)
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy to Vercel
+vercel
+
+# Deploy to production
+vercel --prod
+```
+
+#### Netlify
+
+```bash
+# Build the application
+npm run build
+
+# Deploy to Netlify
+netlify deploy --prod --dir=.next
+```
+
+#### Environment Variables
+
+Ensure these environment variables are set in your deployment platform:
+
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_key
+CLERK_SECRET_KEY=sk_test_your_key
+NEXT_PUBLIC_BACKEND_STOCK_SERVER_URL=https://stockify-microservices-stock.onrender.com
+NEXT_PUBLIC_BACKEND_USER_SERVER_URL=https://stockify-microservices-user.onrender.com
+NEXT_PUBLIC_BACKEND_WATCHLIST_SERVER_URL=https://stockify-microservices-watchlist.onrender.com
+NEXT_PUBLIC_BACKEND_ORDER_SERVER_URL=https://stockify-microservices-orders.onrender.com
+NEXT_PUBLIC_BACKEND_HOLDING_SERVER_URL=https://stockify-microservices-holdings.onrender.com
+```
+
+### 🔄 Local Development with Deployed Backend
+
+To develop locally while using the deployed backend services:
+
+1. Use the production environment variables shown above
+2. Run `npm run dev` to start the local development server
+3. The frontend will connect to deployed Render backend services
+4. No need to run backend services locally
+
+### 🛠️ Local Development with Local Backend
+
+To develop with local backend services:
+
+1. Update `.env` with localhost URLs:
+   ```env
+   NEXT_PUBLIC_BACKEND_STOCK_SERVER_URL=http://localhost:8001
+   NEXT_PUBLIC_BACKEND_USER_SERVER_URL=http://localhost:8000
+   NEXT_PUBLIC_BACKEND_WATCHLIST_SERVER_URL=http://localhost:8002
+   NEXT_PUBLIC_BACKEND_ORDER_SERVER_URL=http://localhost:8004
+   NEXT_PUBLIC_BACKEND_HOLDING_SERVER_URL=http://localhost:8003
+   ```
+2. Start all backend services on respective ports
+3. Run `npm run dev` for frontend
 
 ---
 

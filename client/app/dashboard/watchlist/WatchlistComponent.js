@@ -15,7 +15,7 @@ const Page = () => {
       return;
     }
 
-    axios.get("http://localhost:8002/api/watchlist/userwatchlists", {
+    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_WATCHLIST_SERVER_URL}/api/watchlist/userwatchlists`, {
       params: { userId },
       headers: {
         Authorization: `Bearer ${token}`
@@ -128,7 +128,7 @@ const WatchListActions = ({ uid }) => {
       return;
     }
 
-    axios.delete("http://localhost:8002/api/watchlist/removeuserwatchlist", {
+    axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_WATCHLIST_SERVER_URL}/api/watchlist/removeuserwatchlist`, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'

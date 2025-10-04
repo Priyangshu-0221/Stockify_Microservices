@@ -12,7 +12,7 @@ const BuyActionWindow = ({ uid }) => {
     const userId = localStorage.getItem("userId");
     try {
       await axios.post(
-        "http://localhost:8004/api/orders/addorder",
+        `${process.env.NEXT_PUBLIC_BACKEND_ORDER_SERVER_URL}/api/orders/addorder`,
         {
           name: uid,
           qty: quantity,
@@ -27,7 +27,7 @@ const BuyActionWindow = ({ uid }) => {
         }
       );
       await axios.post(
-        "http://localhost:8003/api/holdings/addholdings",
+        `${process.env.NEXT_PUBLIC_BACKEND_HOLDING_SERVER_URL}/api/holdings/addholdings`,
         {
           name: uid,
           qty: quantity,

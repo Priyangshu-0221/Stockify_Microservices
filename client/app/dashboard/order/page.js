@@ -9,7 +9,7 @@ const Page = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
-    axios.get("http://localhost:8004/api/orders/userorder", {
+    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_ORDER_SERVER_URL}/api/orders/userorder`, {
       params: { userId }, // goes into the query string
       headers: {
         Authorization: `Bearer ${token}`

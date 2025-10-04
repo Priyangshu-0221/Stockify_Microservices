@@ -8,9 +8,10 @@
 [![Clerk](https://img.shields.io/badge/Clerk-Auth-purple.svg)](https://clerk.com/)
 [![Tailwind](https://img.shields.io/badge/Tailwind-4.1.11-38bdf8.svg)](https://tailwindcss.com/)
 [![Material-UI](https://img.shields.io/badge/MUI-7.2.0-007fff.svg)](https://mui.com/)
+[![Deployed on Render](https://img.shields.io/badge/Deployed%20on-Render-46E3B7.svg)](https://render.com/)
 [![License](https://img.shields.io/badge/License-ISC-yellow.svg)](https://opensource.org/licenses/ISC)
 
-> 🚀 **Stockify** is a full-stack, modern trading platform that combines a sleek Next.js frontend with a robust microservices backend. Built for real-time stock tracking, portfolio management, and seamless trading operations with enterprise-grade security and performance.
+> 🚀 **Stockify** is a full-stack, modern trading platform that combines a sleek Next.js frontend with a robust microservices backend. Built for real-time stock tracking, portfolio management, and seamless trading operations with enterprise-grade security and performance. **All backend services are live on Render!**
 
 ---
 
@@ -62,11 +63,13 @@
 ### 🏗️ Technical Excellence
 
 - ⚡ **Microservices Architecture** with independent service deployment
+- ☁️ **Cloud Deployment** - All backend services deployed on Render
 - 🔄 **Real-time Data Sync** between frontend and backend
 - 🛡️ **Enterprise Security** with JWT authentication and data isolation
-- 📊 **Scalable Database** design with MongoDB
+- 📊 **Scalable Database** design with MongoDB Atlas
 - 🌍 **CORS Enabled** for seamless frontend-backend integration
 - ⚡ **Lightning Fast** with Next.js 15 and Turbopack
+- 🔐 **Environment-based Configuration** for flexible deployment
 
 ---
 
@@ -76,7 +79,7 @@
                          🌐 Stockify Platform Architecture
 
                      ┌─────────────────────────────────────┐
-                     │          Frontend (Next.js)        │
+                     │    Frontend (Next.js - Vercel)     │
                      │     ✨ Modern React Interface      │
                      │   📱 Responsive Design & Charts    │
                      └─────────────────┬───────────────────┘
@@ -95,22 +98,33 @@
    │Service  │    │Service  │    │Service  │    │Service  │    │Service  │
    │ :8000   │    │ :8001   │    │ :8002   │    │ :8003   │    │ :8004   │
    │🔒 Auth  │    │🔓 Public│    │🔒 Auth  │    │🔒 Auth  │    │🔒 Auth  │
+   │☁️ Render│    │☁️ Render│    │☁️ Render│    │☁️ Render│    │☁️ Render│
    └─────────┘    └─────────┘    └─────────┘    └─────────┘    └─────────┘
         │              │                │                │              │
         └──────────────┴────────────────┼────────────────┴──────────────┘
                                         ▼
                             ┌─────────────────────────┐
+                            │     MongoDB Atlas       │
+                            │   📊 Cloud Database     │
+                            │  🔄 Real-time Sync     │
+                            └─────────────────────────┘
+```
+
+                            ┌─────────────────────────┐
                             │        MongoDB          │
                             │   📊 Unified Database   │
                             │  🔄 Real-time Sync     │
                             └─────────────────────────┘
+
 ```
 
 ### 🔄 Data Flow
 
 ```
+
 User Interaction → Frontend UI → API Calls → Microservices → Database → Real-time Updates
-```
+
+````
 
 ---
 
@@ -171,7 +185,7 @@ cp .env.example .env.local
 
 # 4. Start the entire platform
 npm run dev:all  # Starts all services concurrently
-```
+````
 
 ### 🎯 Manual Setup
 
@@ -769,6 +783,122 @@ curl -X POST http://localhost:8000/api/user/adduser \
 - **Bundle Optimization**: Tree shaking and minification
 - **Database Indexing**: Optimized queries
 - **Caching**: Browser and API response caching
+
+---
+
+## ☁️ Deployment
+
+### 🌐 Production Deployment
+
+The Stockify platform is deployed with a hybrid architecture:
+
+#### Backend Services (Render)
+
+All 5 microservices are deployed on **Render** as independent web services:
+
+| Service       | URL                                                   | Port | Status  |
+| ------------- | ----------------------------------------------------- | ---- | ------- |
+| **User**      | https://stockify-microservices-user.onrender.com      | 8000 | ✅ Live |
+| **Stock**     | https://stockify-microservices-stock.onrender.com     | 8001 | ✅ Live |
+| **Watchlist** | https://stockify-microservices-watchlist.onrender.com | 8002 | ✅ Live |
+| **Holdings**  | https://stockify-microservices-holdings.onrender.com  | 8003 | ✅ Live |
+| **Orders**    | https://stockify-microservices-orders.onrender.com    | 8004 | ✅ Live |
+
+#### Frontend Deployment Options
+
+The Next.js frontend can be deployed on:
+
+- **Vercel** (Recommended) - Optimized for Next.js with automatic deployments
+- **Netlify** - Fast static site hosting with serverless functions
+- **AWS Amplify** - Full-stack deployment with CI/CD
+- **Railway** - Simple deployment with automatic HTTPS
+
+### 🔐 Environment Configuration
+
+#### Production Frontend Environment Variables
+
+```env
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_key
+CLERK_SECRET_KEY=sk_test_your_key
+
+# Backend Services (Deployed on Render)
+NEXT_PUBLIC_BACKEND_STOCK_SERVER_URL=https://stockify-microservices-stock.onrender.com
+NEXT_PUBLIC_BACKEND_USER_SERVER_URL=https://stockify-microservices-user.onrender.com
+NEXT_PUBLIC_BACKEND_WATCHLIST_SERVER_URL=https://stockify-microservices-watchlist.onrender.com
+NEXT_PUBLIC_BACKEND_ORDER_SERVER_URL=https://stockify-microservices-orders.onrender.com
+NEXT_PUBLIC_BACKEND_HOLDING_SERVER_URL=https://stockify-microservices-holdings.onrender.com
+```
+
+#### Production Backend Environment Variables
+
+Each Render service requires:
+
+```env
+# Database
+MONGO_URL=mongodb+srv://username:password@cluster.mongodb.net/stockify
+
+# Clerk (for authenticated services)
+CLERK_SECRET_KEY=sk_test_your_key
+CLERK_PUBLISHABLE_KEY=pk_test_your_key
+
+# Service Port
+PORT=800X  # Automatically set by Render
+```
+
+### 🚀 Deployment Workflow
+
+#### Frontend (Vercel)
+
+```bash
+# 1. Install Vercel CLI
+npm i -g vercel
+
+# 2. Deploy
+vercel
+
+# 3. Set environment variables in Vercel Dashboard
+# 4. Deploy to production
+vercel --prod
+```
+
+#### Backend (Render)
+
+1. **Create New Web Service** for each microservice
+2. **Connect GitHub Repository**
+3. **Configure Build Settings**:
+   - Build Command: `npm install`
+   - Start Command: `npm run [service]`
+4. **Set Environment Variables**
+5. **Deploy Automatically** on Git push
+
+### 🔄 Development Modes
+
+#### Local Development with Deployed Backend (Current Setup)
+
+- Frontend runs locally on `http://localhost:3000`
+- Connects to deployed Render backend services
+- No need to run backend services locally
+- Ideal for frontend development
+
+#### Full Local Development
+
+- All services run on localhost
+- Frontend: `http://localhost:3000`
+- Backend: `http://localhost:8000-8004`
+- MongoDB: Local instance or Atlas
+- Full control over entire stack
+
+### 📊 Deployment Best Practices
+
+- ✅ Use environment variables for all configuration
+- ✅ Enable CORS on backend services for frontend domain
+- ✅ Implement proper error handling and logging
+- ✅ Use MongoDB Atlas for production database
+- ✅ Enable automatic deployments from main branch
+- ✅ Set up health check endpoints for monitoring
+- ✅ Implement rate limiting for API protection
+- ✅ Use HTTPS for all production endpoints
 
 ---
 

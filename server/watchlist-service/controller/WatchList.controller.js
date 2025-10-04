@@ -17,7 +17,7 @@ export const addWatchlist = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const stockResponse = await axios.get(`http://localhost:8001/api/stock/${id}`);
+    const stockResponse = await axios.get(`${process.env.NODE_STOCK_BACKEND_URL}/api/stock/${id}`);
     const stockData = stockResponse.data;
 
     const duplicate = await WatchListModel.findOne({
