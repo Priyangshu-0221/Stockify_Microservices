@@ -135,7 +135,7 @@ const WatchListActions = ({ uid }) => {
       },
       data: {
         userId,
-        watchlistId: uid,
+        company: uid, // Send company name instead of watchlistId
       }
     }).then((res) => {
       if (res.data.success) {

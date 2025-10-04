@@ -91,7 +91,7 @@ export const getUserWatchlist = async (req, res) => {
 
 export const removeUserWatchlist = async (req, res) => {
   try {
-    const { userId, watchlistId } = req.body;
+    const { userId, watchlistId, company } = req.body;
 
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -99,27 +99,56 @@ export const removeUserWatchlist = async (req, res) => {
     }
     const token = authHeader.split(" ")[1];
 
-    if (!userId || !watchlistId) {
-      return res.status(400).json({ message: "User ID and Watchlist ID are required" });
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
     }
 
-    const user = await UserModel.findOne({ _id: userId });
+    if (!watchlistId && !company) {
+      return res.status(400).json({ message: "Either Watchlist ID or Company name is required" });
+    }
+
+    console.log("Attempting to remove watchlist item:", { userId, watchlistId, company });
+
+    const user = await UserModel.findById(userId);
     if (!user) {
+      console.log("User not found:", userId);
       return res.status(404).json({ message: "User not found" });
     }
 
-    const deletedItem = await WatchListModel.findOneAndDelete({
-      _id: watchlistId,
-      owner: user._id,
-    });
+    console.log("User found:", user._id);
+
+    let deletedItem;
+
+    // If company name is provided, delete by company name
+    if (company) {
+      deletedItem = await WatchListModel.findOneAndDelete({
+        company: company,
+        owner: user._id,
+      });
+      console.log("Attempting to delete by company name:", company);
+    } 
+    // Otherwise, delete by ObjectId
+    else {
+      deletedItem = await WatchListModel.findOneAndDelete({
+        _id: watchlistId,
+        owner: user._id,
+      });
+      console.log("Attempting to delete by ID:", watchlistId);
+    }
 
     if (!deletedItem) {
+      console.log("Watchlist item not found:", { watchlistId, company, owner: user._id });
       return res.status(404).json({ message: "Watchlist item not found" });
     }
 
+    console.log("Watchlist item deleted:", deletedItem._id);
+
+    // Update user's watchlist array
     await UserModel.findByIdAndUpdate(user._id, {
-      $pull: { watchlist: watchlistId },
+      $pull: { watchlist: deletedItem._id },
     });
+
+    console.log("User watchlist updated successfully");
 
     res.status(200).json({
       success: true,
@@ -127,9 +156,11 @@ export const removeUserWatchlist = async (req, res) => {
       removedItem: deletedItem,
     });
   } catch (error) {
+    console.error("Error removing watchlist item:", error);
     res.status(500).json({
       message: "Failed to remove watchlist item",
       error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 };
