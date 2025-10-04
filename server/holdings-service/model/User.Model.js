@@ -20,6 +20,16 @@ const UserSchema = new Schema({
                 [{
                         type: Schema.Types.ObjectId,
                         ref: "Watchlist"
+                }],
+                orders:
+                [{
+                        type: Schema.Types.ObjectId,
+                        ref: "order"
+                }],
+                holdings:
+                [{
+                        type: Schema.Types.ObjectId,
+                        ref: "holdings"
                 }]
 });
 const UserModel = model("User", UserSchema);

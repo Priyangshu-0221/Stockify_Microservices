@@ -51,12 +51,13 @@
 
 ### 🎨 User Experience
 
-- 🌈 **Modern UI Design** with glassmorphism and gradient effects
-- ✨ **Smooth Animations** powered by GSAP
+- � **Clean, Simple Design** with focus on usability and clarity
+- 📈 **Live Stock Charts** with 1-minute interval real-time updates
 - 📱 **Fully Responsive** design for all devices
 - 🌙 **Dark Mode Support** with customizable themes
-- 🔔 **Real-time Notifications** for important updates
+- 🔔 **Real-time Notifications** with toast feedback
 - 🎯 **Intuitive Navigation** with breadcrumbs and search
+- 📊 **Interactive Data Visualization** with Chart.js and Recharts
 
 ### 🏗️ Technical Excellence
 
@@ -409,18 +410,19 @@ npm run start        # Production mode
 
 ### 🏠 Frontend Pages
 
-| Page          | Route                  | Description         | Key Features                      |
-| ------------- | ---------------------- | ------------------- | --------------------------------- |
-| **Homepage**  | `/`                    | Landing page        | Hero section, features, education |
-| **Dashboard** | `/dashboard`           | Stock overview      | Real-time data, search, watchlist |
-| **Watchlist** | `/dashboard/watchlist` | Personal stocks     | Radar charts, price tracking      |
-| **Holdings**  | `/dashboard/holdings`  | Portfolio           | Performance metrics, analytics    |
-| **Orders**    | `/dashboard/orders`    | Transaction history | Buy/sell orders, status tracking  |
-| **Funds**     | `/dashboard/funds`     | Account balance     | Deposits, withdrawals, history    |
-| **About**     | `/about`               | Company info        | Mission, team, contact            |
-| **Pricing**   | `/pricing`             | Subscription plans  | Feature comparison, trials        |
-| **Product**   | `/product`             | Features showcase   | Demos, specifications             |
-| **Support**   | `/support`             | Help center         | FAQs, contact, knowledge base     |
+| Page             | Route                  | Description         | Key Features                      |
+| ---------------- | ---------------------- | ------------------- | --------------------------------- |
+| **Homepage**     | `/`                    | Landing page        | Hero section, features, education |
+| **Dashboard**    | `/dashboard`           | Stock overview      | Real-time data, search, watchlist |
+| **Watchlist**    | `/dashboard/watchlist` | Personal stocks     | Radar charts, price tracking      |
+| **Holdings**     | `/dashboard/holdings`  | Portfolio           | Performance metrics, analytics    |
+| **Orders**       | `/dashboard/orders`    | Transaction history | Buy/sell orders, status tracking  |
+| **Funds**        | `/dashboard/funds`     | Account balance     | Deposits, withdrawals, history    |
+| **About**        | `/about`               | Company info        | Mission, team, contact            |
+| **Pricing**      | `/pricing`             | Subscription plans  | Feature comparison, trials        |
+| **Product**      | `/product`             | Features showcase   | Demos, specifications             |
+| **Support**      | `/support`             | Help center         | FAQs, contact, knowledge base     |
+| **Stock Detail** | `/stock/[id]`          | Live stock chart    | Real-time updates, price tracking |
 
 ### 🧩 Frontend Components
 
@@ -541,21 +543,33 @@ npm run start        # Production mode
 
 ## 🎨 Frontend Features
 
+### 📊 Stock Detail Page Features
+
+- **Live Price Chart**: Real-time stock price updates every 1 minute
+- **AreaChart Visualization**: Smooth gradient charts using Recharts
+- **Time-Series Data**: Dynamic data generation with realistic price fluctuations
+- **Price Indicators**: Color-coded positive/negative price changes
+- **Stock Information**: Open, high, low, previous close data display
+- **Responsive Design**: Mobile-optimized chart viewing
+
 ### 🌈 Design System
 
-- **Color Palette**: Blue and indigo gradients with accent colors
+- **Color Palette**: Clean blue and gray tones with solid colors
 - **Typography**: Geist Sans and Geist Mono fonts
-- **Spacing**: Consistent 4px grid system
-- **Animations**: GSAP-powered smooth transitions
+- **Spacing**: Consistent 4px grid system with Tailwind utilities
+- **Border Radius**: Simple rounded corners (rounded-lg for consistency)
+- **Shadows**: Minimal shadow usage for subtle depth
 - **Icons**: Remix Icons and Material-UI icons
 
 ### 📊 Data Visualization
 
 - **Chart.js**: Canvas-based charts for performance
-- **Recharts**: React-native charting components
+- **Recharts**: React-native charting components with AreaChart
+- **Live Stock Charts**: Real-time price updates every 1 minute
 - **Radar Charts**: Portfolio composition visualization
-- **Line Charts**: Price trends over time
-- **Interactive Elements**: Hover tooltips and zoom functionality
+- **Line Charts**: Price trends over time with time-series data
+- **Interactive Elements**: Hover tooltips and responsive charts
+- **Time-Series Data**: Maintains last 30 data points for trends
 
 ### 📱 Responsive Design
 

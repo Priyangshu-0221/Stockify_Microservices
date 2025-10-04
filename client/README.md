@@ -53,12 +53,12 @@
 
 ### 🎨 UI/UX Features
 
-- 🌈 **Modern Gradient Design** with glassmorphism effects
-- ✨ **Smooth Animations** powered by GSAP
+- � **Clean, Simple Design** with focus on usability and clarity
+- 📊 **Real-time Charts** with live stock price updates (1-minute intervals)
 - 🎯 **Intuitive Navigation** with breadcrumbs and search
 - 🔔 **Toast Notifications** for user feedback
-- 📊 **Data Visualization** with multiple chart types
-- 🎪 **Micro-interactions** for enhanced user experience
+- � **Data Visualization** with Chart.js and Recharts
+- 📱 **Mobile-First Approach** with responsive tables and layouts
 - 🌍 **Accessibility** optimized for screen readers
 - 🎭 **Custom Icons** with Remix Icons and Material-UI
 
@@ -366,11 +366,12 @@ npm run lint:fix
 
 ### 📊 Dashboard (`/dashboard`)
 
-- **Stock Overview** with real-time data table
-- **Search & Filter** functionality
-- **Add to Watchlist** with one-click action
-- **View Charts** for detailed stock analysis
-- **Responsive Table** with mobile optimization
+- **Stock Overview** with clean, responsive data table
+- **Search & Filter** functionality with real-time updates
+- **Add to Watchlist** with one-click action and toast feedback
+- **View Charts** for detailed stock analysis with live updates
+- **Responsive Table** with mobile optimization (hidden columns on small screens)
+- **Clean UI** with simple hover states and solid button colors
 
 ### ⭐ Watchlist (`/dashboard/watchlist`)
 
@@ -428,6 +429,15 @@ npm run lint:fix
 - **Contact Form** for user inquiries
 - **Live Chat** integration
 - **Knowledge Base** with tutorials
+
+### 📈 Stock Detail (`/stock/[id]`)
+
+- **Live Price Chart** with 1-minute interval updates
+- **Real-time Data** with price fluctuations within high/low range
+- **Interactive AreaChart** using Recharts for smooth visualization
+- **Stock Information** with open, high, low, previous close data
+- **Price Change Indicators** with color-coded positive/negative changes
+- **Time-series Data** maintaining last 30 data points for trends
 
 ---
 
@@ -521,11 +531,11 @@ npm run lint:fix
 
 ### 🌈 Design System
 
-- **Color Palette**: Blue and Indigo gradients with accent colors
+- **Color Palette**: Clean blue and gray tones with solid colors
 - **Typography**: Geist Sans and Geist Mono fonts
-- **Spacing**: Consistent 4px grid system
-- **Border Radius**: Rounded corners with 8px, 12px, 16px variants
-- **Shadows**: Layered shadow system for depth
+- **Spacing**: Consistent 4px grid system with Tailwind utilities
+- **Border Radius**: Simple rounded corners (rounded-lg for consistency)
+- **Shadows**: Minimal shadow usage for subtle depth
 
 ### 🎯 Tailwind Configuration
 
@@ -552,26 +562,21 @@ module.exports = {
 };
 ```
 
-### ✨ Custom Animations
+### ✨ Styling Approach
 
 ```css
 /* app/globals.css */
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-.shimmer {
-  animation: shimmer 2s infinite;
-}
+/* Clean, utility-first approach with Tailwind CSS */
+/* Simple hover states and transitions */
 
 .hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  background-color: rgb(249 250 251); /* gray-50 */
+}
+
+/* Responsive table with mobile optimization */
+.table-responsive {
+  overflow-x: auto;
+  min-width: 800px;
 }
 ```
 
@@ -972,4 +977,3 @@ If you find this project helpful, please consider giving it a ⭐ on GitHub! You
 ---
 
 **Built with ❤️ by [Priyangshu](https://github.com/Priyangshu-0221)**
-

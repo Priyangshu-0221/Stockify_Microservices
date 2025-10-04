@@ -16,29 +16,35 @@ const OrderComponent = ({ orders }) => {
     });
   };
 
-  const sellItem_removeHolding = async (id) => {
+  const sellItem_removeHolding = async (id, stockName) => {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
-    await axios
-      .delete("http://localhost:8004/api/orders/removeuserorder", {
+    
+    try {
+      // First, remove the order
+      await axios.delete("http://localhost:8004/api/orders/removeuserorder", {
         data: { id, userId },
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      .then((res) => {
-        toast.error("Stock Sold");
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
       });
-    await axios
-      .delete("http://localhost:8003/api/holdings/removeuserholding", {
-        data: { id, userId },
+      
+      // Then, remove the holding by stock name
+      await axios.delete("http://localhost:8003/api/holdings/removeuserholding", {
+        data: { userId, name: stockName },
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
+      });
+      
+      toast.success("Stock Sold Successfully");
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (error) {
+      console.error("Error selling stock:", error);
+      toast.error(error.response?.data?.message || "Failed to sell stock");
+    }
   };
 
   return (
@@ -101,7 +107,7 @@ const OrderComponent = ({ orders }) => {
                       Edit
                     </button>
                     <button
-                      onClick={() => sellItem_removeHolding(stock._id)}
+                      onClick={() => sellItem_removeHolding(stock._id, stock.name)}
                       className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-3 md:px-4 rounded-lg transition-colors duration-200 text-xs md:text-sm"
                     >
                       Sell
