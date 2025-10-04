@@ -196,7 +196,7 @@ const Navbar = () => {
             {/* Desktop Auth Buttons */}
             <div className="hidden md:flex items-center space-x-3">
               <SignedOut>
-                <SignInButton className="px-4 py-2 bg-white border-2 border-blue-600 text-blue-600 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 hover:scale-105" />
+                {/* <SignInButton className="px-4 py-2 bg-white border-2 border-blue-600 text-blue-600 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 hover:scale-105" /> */}
                 <SignUpButton>
                   <button className="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
                     Sign Up
