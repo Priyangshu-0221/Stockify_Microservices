@@ -10,8 +10,16 @@ import morgan from 'morgan';
 const app = express();
 const PORT = 8000;
 
+// CORS configuration for production
+const corsOptions = {
+  origin: ['https://stockify-microservices.vercel.app', 'http://localhost:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(clerkMiddleware());
 app.use(morgan('dev'));
 // Start the server and listen on the specified port

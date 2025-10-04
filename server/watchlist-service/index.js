@@ -10,9 +10,17 @@ import routes from './routes/index.js';
 const app = express();
 const PORT = 8002;
 
+// CORS configuration for production
+const corsOptions = {
+  origin: ['https://stockify-microservices.vercel.app', 'http://localhost:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
 app.use(bodyParser.json());
 app.use(morgan('dev'));
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(clerkMiddleware());
 
 app.use(routes);
